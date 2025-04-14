@@ -6,5 +6,6 @@ node_modules/
 # MAT reports directory
 mat_reports/
 
-# Heap analysis result file
+# Analysis results directories and files
+analysis_results/
 heap_analysis_result.json
