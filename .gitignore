@@ -1,0 +1,10 @@
+# Node.js modules
+node_modules/
+# Generated report files
+*.zip
+
+# MAT reports directory
+mat_reports/
+
+# Heap analysis result file
+heap_analysis_result.json
