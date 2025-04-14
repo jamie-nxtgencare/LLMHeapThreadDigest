@@ -1,0 +1,15 @@
+{
+  "name": "llm-heap-thread-digest",
+  "version": "1.0.0",
+  "description": "Java Performance Analyzer for Heap and Thread Dumps",
+  "main": "HeapAnalyzer.js",
+  "scripts": {
+    "analyze": "node HeapAnalyzer.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
