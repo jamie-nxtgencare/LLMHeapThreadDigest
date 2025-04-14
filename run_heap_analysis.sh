@@ -10,6 +10,7 @@ MAT_EXECUTABLE="${MAT_APP}/Contents/Eclipse/ParseHeapDump.sh"
 REPORTS_DIR="${PROJECT_DIR}/mat_reports"
 HEAP_DUMP_FILE=""
 REPORTS=""
+OUTPUT_FILE="${PROJECT_DIR}/heap_analysis_result.json"
 
 # Logging function
 log() {
@@ -31,6 +32,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -r|--reports)
             REPORTS="$2"
+            shift 2
+            ;;
+        -o|--output)
+            OUTPUT_FILE="$2"
             shift 2
             ;;
         *)
@@ -157,7 +162,7 @@ fi
 log "Processing MAT reports with HeapAnalyzer.js..."
 node "${PROJECT_DIR}/HeapAnalyzer.js" "$HEAP_DUMP_FILE" \
     --report-dir "$REPORTS_DIR" \
-    --output "${PROJECT_DIR}/heap_analysis_result.json"
+    --output "$OUTPUT_FILE"
 
 # Check HeapAnalyzer exit status
 HEAP_ANALYZER_EXIT_STATUS=$?
@@ -165,6 +170,6 @@ if [ $HEAP_ANALYZER_EXIT_STATUS -ne 0 ]; then
     error_exit "HeapAnalyzer.js failed with exit status $HEAP_ANALYZER_EXIT_STATUS"
 fi
 
-log "Heap analysis complete. Results saved to ${PROJECT_DIR}/heap_analysis_result.json"
+log "Heap analysis complete. Results saved to $OUTPUT_FILE"
 
 exit 0
