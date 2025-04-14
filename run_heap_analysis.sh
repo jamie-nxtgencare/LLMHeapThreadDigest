@@ -68,10 +68,29 @@ log "Reports Directory: $REPORTS_DIR"
 log "Requested Reports: $REPORTS"
 
 # Attempt to generate reports
-IFS=',' read -ra REPORT_TYPES <<< "$REPORTS"
+# Check for existing report ZIP files
+REPORT_ZIP_FILES=()
 for report in "${REPORT_TYPES[@]}"; do
-    log "Generating $report report..."
-    "$MAT_EXECUTABLE" "$HEAP_DUMP_FILE" "org.eclipse.mat.api:$report" 2>&1
+    REPORT_ZIP_FILE="${HEAP_DUMP_FILE%.*}_${report}.zip"
+    if [ -f "$REPORT_ZIP_FILE" ]; then
+        log "Found existing report ZIP file: $REPORT_ZIP_FILE"
+        REPORT_ZIP_FILES+=("$REPORT_ZIP_FILE")
+    else
+        log "Generating $report report..."
+        "$MAT_EXECUTABLE" "$HEAP_DUMP_FILE" "org.eclipse.mat.api:$report" 2>&1
+        REPORT_ZIP_FILE="${HEAP_DUMP_FILE%.*}_${report}.zip"
+        if [ -f "$REPORT_ZIP_FILE" ]; then
+            REPORT_ZIP_FILES+=("$REPORT_ZIP_FILE")
+        else
+            log "Failed to generate $report report"
+        fi
+    fi
+done
+
+# Extract report ZIP files
+for zip_file in "${REPORT_ZIP_FILES[@]}"; do
+    log "Extracting $zip_file..."
+    unzip -o "$zip_file" -d "$REPORTS_DIR" > /dev/null
 done
 for report in "${REPORT_TYPES[@]}"; do
     log "Generating $report report..."
